@@ -43,17 +43,19 @@ public class User
     [Compare("Password")]
     [DataType(DataType.Password)]
     public string PasswordConfirm { get; set; }
-    //TODO: replace POST
-    //!updated 
-    // list of post objects (adding to an empty list of post objects):
-
-    // //user can have many posts
-    // public List<Post> AuthorPosts {get; set;} = new List<Post>();
-
-    // //user can have many likes
-    // public List<UserPostLike> UserLikes {get; set;} = new List<UserPostLike>();
 
 
+    //!SET UP MANY TO MANY =========================================
+    // list of wedding objects (adding to an empty list of wedding objects):
+
+    //One to many ---- user can have many weddings
+    public List<Wedding> CreatedWeddings {get; set;} = new List<Wedding>();
+
+
+    //many to many
+    public List<WeddingRSVP> UserWeddingRSVPs {get; set;} = new List<WeddingRSVP>();
+
+//! =================================================================
 
 }
 // Adding Unique ======================== 

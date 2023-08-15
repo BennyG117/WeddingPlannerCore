@@ -17,7 +17,6 @@ public class Wedding
 
 
 //! UPDATE EVERYTHIING BELOW: ===============================
-//! UPDATE EVERYTHIING BELOW: ===============================
 
 
 // Wedder One (string), Wedder Two (string), Date (Date), Address (string)
@@ -39,8 +38,11 @@ public class Wedding
 
     // WeddingDate ========================= 
     [Required]
-    // [MinLength(10, ErrorMessage = "Must be at least 10 characters long")]
-    // [MaxLength(50, ErrorMessage = "No longer than 50 characters long")]
+
+    [WeddingDateInFuture]
+    [DataType(DataType.Date)]
+    [Display(Name = "Wedding Date")]
+
     public DateTime WeddingDate {get; set;}
 
 
@@ -67,11 +69,32 @@ public class Wedding
     public User? Creator {get; set;}
 
 
-    //! TBD - adding many to many - user to vacations linking
+    //! ====== adding many to many - user to weddings linking ========
 
+    //many to many
+    public List<WeddingRSVP> WeddingGuests {get; set;} = new List<WeddingRSVP>();
 
-// List<Vacation> vacations = db.Vacations.Include(v => v.Creator).ToList();
+    //! =================================================================
 
-    // public List<UserPostLike> PostLikes {get; set;} = new List<UserPostLike>();
 
 }
+
+
+// CUSTOM VALIDATION BEING USED FOR: WeddingDate Check Outside the above
+public class WeddingDateInFutureAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        DateTime Now = DateTime.Now;
+        DateTime Input = (DateTime)value;
+
+
+        if (Input < Now)
+        {
+            return new ValidationResult("Wedding Date must be in the future.");
+        } else {
+            return ValidationResult.Success;
+        }
+    }
+}
+

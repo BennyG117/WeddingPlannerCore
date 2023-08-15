@@ -11,20 +11,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 
+
+//! *************** REMINDER to update public class "CONTROLLER NAMES" BELOW ***************
 [SessionCheck]
-public class VacationController : Controller
+public class WeddingController : Controller
 {
-    private readonly ILogger<VacationController> _logger;
+    private readonly ILogger<WeddingController> _logger;
 
     // Add field - adding context into our class // "db" can eb any name
     private MyContext db;
 
-    public VacationController(ILogger<VacationController> logger, MyContext context)
+    public WeddingController(ILogger<WeddingController> logger, MyContext context)
     {
         _logger = logger;
         db = context;
     }
-
 
 
 // ==============(DASHBOARD)===================
@@ -32,7 +33,7 @@ public class VacationController : Controller
     public IActionResult Index()
     {
         // vacations is AsyncLocal refered to as vacay on the other view page*
-    List<Wedding> weddings = db.Weddings.Include(v => v.Creator).ToList();        
+    List<Wedding> weddings = db.Weddings.Include(v => v.Creator).Include(l => l.WeddingGuests).ToList();        
         //passing vacations down to the view...
         return View("All", weddings);
     }
@@ -48,27 +49,38 @@ public class VacationController : Controller
         return View();
     }
 
-// ========(handle NEW PostMethod - view)=========
+// ========(handle NEW WeddingMethod - view)=========
+//TODO: check if wedder one is in the db and if wedder two is also in db, if both exist in the db then validation will trigger.
 
-//newVacay becomes newWedding
 
     [HttpPost("wedding/create")]
     //bringing in the model
     public IActionResult Create(Wedding newWedding)
     {
+        //check category and declaration at top of method = "newWedding" // does wedder one exist in the db?
+        if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
+        {
+            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+        }
+
+        //checks model requirements*
         if(!ModelState.IsValid)
         {
             //trigger to see validations
             return View("New");
         }
 
+
+
+
         newWedding.UserId = (int) HttpContext.Session.GetInt32("UUID");
 
         //weddings from context
         db.Weddings.Add(newWedding);
         db.SaveChanges();
-        //When success, send to index aka home
-        return RedirectToAction("Index");
+        //When success, send to Details view single wedding
+        return RedirectToAction("Details",  new {id = newWedding.WeddingId});
     }
 
 
@@ -79,7 +91,7 @@ public class VacationController : Controller
     public IActionResult Details(int id)
     {
         // confirm it matches the id we're passing in above*
-    Wedding? weddings = db.Weddings.Include(v => v.Creator).FirstOrDefault(p => p.WeddingId == id);
+    Wedding? weddings = db.Weddings.Include(v => v.Creator).Include(r => r.WeddingGuests).ThenInclude(u => u.User).FirstOrDefault(p => p.WeddingId == id);
 
     if (weddings == null)
     {
@@ -114,6 +126,13 @@ public class VacationController : Controller
     //adding in id parameter*
     public IActionResult Update(Wedding editedWedding, int id)
     {
+        //check category and declaration at top of method = "editedWedding" // does wedder one exist in the db?
+        if (db.Users.Any(u => u.FirstName == editedWedding.WedderOne) && db.Users.Any(u => u.FirstName == editedWedding.WedderTwo))
+        {
+            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+        }
+
 
         if (!ModelState.IsValid)
         {
@@ -162,6 +181,39 @@ public class VacationController : Controller
 
 
 
+
+    //! setting up many to many RSVP method ================
+    //RSVP Method ============================================
+    [HttpPost("weddings/{id}/rsvp")]
+    public IActionResult RSVP(int id)
+    {
+        int? userId = HttpContext.Session.GetInt32("UUID");
+
+        if (userId == null) 
+        {
+            return RedirectToAction("Index");
+        }
+        
+        //must equal for session check
+        WeddingRSVP? existingRSVP = db.WeddingRSVPs.FirstOrDefault(u => u.UserId == userId.Value && u.WeddingId == id);
+
+        if(existingRSVP != null)
+        {
+            db.WeddingRSVPs.Remove(existingRSVP);
+        }
+        else
+        {
+            WeddingRSVP newRSVP = new WeddingRSVP()
+            {
+                WeddingId = id,
+                UserId = userId.Value 
+            };
+            db.WeddingRSVPs.Add(newRSVP);
+        }
+        db.SaveChanges();
+        return RedirectToAction("Index");
+
+    }
 
 
 

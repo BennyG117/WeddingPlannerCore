@@ -1,0 +1,39 @@
+@* create view page *@
+
+@model Wedding
+
+<div class="container w-75 mx-auto">
+    <h1>Plan a Wedding</h1>
+        @* //! UPDATE EVERYTHIING BELOW: =============================== *@
+    <form asp-controller="Wedding" asp-action="Create" method="post" class="shadow p-3 rounded">
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="WedderOne"></label>
+            <input asp-for="WedderOne" type="text" class="form-control"/>
+            <span asp-validation-for="WedderOne" class="text-danger font-weight-bold"></span>
+        </div>
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="WedderTwo"></label>
+            <input asp-for="WedderTwo" type="text" class="form-control"/>
+            <span asp-validation-for="WedderTwo" class="text-danger font-weight-bold"></span>
+        </div>
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="WeddingDate"></label>
+            <input asp-for="WeddingDate" type="date" class="form-control"/>
+            <span asp-validation-for="WeddingDate" class="text-danger font-weight-bold"></span>
+        </div>
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="Address"></label>
+            <input asp-for="Address" type="text" class="form-control"/>
+            <span asp-validation-for="Address" class="text-danger font-weight-bold"></span>
+        </div>
+    <button class="btn btn-outline-dark">Create</button>
+
+    </form>
+
+
+</div>
+

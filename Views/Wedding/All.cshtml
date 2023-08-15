@@ -1,7 +1,11 @@
 @model List<Wedding>
 
+
+@* May need to include this for the actions: *@
+@*!=========================== query to check if user is signed up for the Wedding: *@
+
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <hr class="w-75" />
+        <br class="w-75" />
         <table class="w-75 table table-dark table-striped table-bordered">
             <thead class="table-secondary">
                 <th>Wedding Of</th>
@@ -11,14 +15,41 @@
             </thead>
             @foreach (Wedding wedding in Model )
             {
+            //added to session check actions
+            bool alreadyRSVPd = wedding.WeddingGuests.Any(g => g.UserId == Context.Session.GetInt32("UUID"));
             <tbody>
-
-                <a class="text-dark" asp-controller="Wedding" asp-action="Details" asp-route-id="@wedding.WeddingId">
-                    <td>@wedding.WedderOne & @wedding.WedderTwo</td>
-                </a>
+                <td>
+                <a class="text-light" asp-controller="Wedding" asp-action="Details" asp-route-id="@wedding.WeddingId"> @wedding.WedderOne & @wedding.WedderTwo </a>
+                </td>
                 <td>@wedding.WeddingDate</td>
-                <td>TBD - PLACEHOLDER GUEST COUNT</td>
-                <td>TBD - ACTION PLACEHOLDER</td>
+                <td>@wedding.WeddingGuests.Count</td>
+                <td>
+                    <p>
+                        @if(wedding.UserId == Context.Session.GetInt32("UUID"))
+                        {                        
+                        <p>
+                        <form asp-controller="Wedding" asp-action="Delete" asp-route-id="@wedding.WeddingId" method="post">
+                            <button class="btn btn-outline-danger mt-2">Delete</button>
+                        </form>
+                        </p>
+                        }
+                        else {
+                        <form asp-controller="Wedding" asp-action="RSVP" asp-route-id="@wedding.WeddingId">
+                            <button class="btn btn-outline-info">
+                            @if (alreadyRSVPd)
+                            {
+                                <span>Un-RSVP</span>
+                            }
+                            else 
+                            {
+                                <span>RSVP</span>
+                            }
+                            </button>
+                        </form>
+                        }
+
+                    </p>
+                </td>
 
             </tbody>
             }

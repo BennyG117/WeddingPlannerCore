@@ -16,7 +16,7 @@ namespace WeddingPlannerCore.Controllers;
 public class UserController : Controller
 {
     private readonly ILogger<UserController> _logger;
-    
+
     private MyContext db;
 
 
@@ -26,25 +26,24 @@ public class UserController : Controller
         db = context;
     }
 
-    //TODO: UPDATE REDIRECTS, etc index, wedding....
-//   ============================================
-//  using session...
+    // home method  ============================================
+    //  using session...
 
     [HttpGet("")]
     public IActionResult Index()
     {
-        if(HttpContext.Session.GetInt32("UUID") != null)
+        if (HttpContext.Session.GetInt32("UUID") != null)
         {
             return RedirectToAction("Index", "Wedding");
         }
-    return View("Index");  
+        return View("Index");
     }
 
-//  method ============================================
+    //  method ============================================
     [HttpPost("/register")]
     public IActionResult Register(User newUser)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return View("Index");
         }
@@ -55,31 +54,32 @@ public class UserController : Controller
         db.Users.Add(newUser);
         db.SaveChanges();
         HttpContext.Session.SetInt32("UUID", newUser.UserId);
+        HttpContext.Session.SetString("UserName", newUser.FirstName);
 
 
         //update...
         return RedirectToAction("Index", "Wedding");
     }
-//  Login method ================================================
+    //  Login method ================================================
     [HttpPost("/login")]
     public IActionResult Login(LoginUser userSubmission)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return View("Index");
         }
         //EMAIL CHECK HERE
-        User? userInDb = db.Users.FirstOrDefault(e => e.Email == userSubmission.LoginEmail);        
+        User? userInDb = db.Users.FirstOrDefault(e => e.Email == userSubmission.LoginEmail);
         // If no user exists with the provided email        
-        if(userInDb == null)        
-        {            
+        if (userInDb == null)
+        {
             ModelState.AddModelError("LoginEmail", "Invalid Email/Password");
             return View("Index");
         }
         //PASSWORD CHECK
-        PasswordHasher<LoginUser> hashBrowns = new PasswordHasher<LoginUser>();                    
+        PasswordHasher<LoginUser> hashBrowns = new PasswordHasher<LoginUser>();
         var result = hashBrowns.VerifyHashedPassword(userSubmission, userInDb.Password, userSubmission.LoginPassword);
-        if(result == 0)
+        if (result == 0)
         {
             ModelState.AddModelError("LoginPassword", "Invalid Password/Email");
             return View("Index");
@@ -87,13 +87,15 @@ public class UserController : Controller
 
         //Handle success
         HttpContext.Session.SetInt32("UUID", userInDb.UserId);
+        HttpContext.Session.SetString("UserName", userInDb.FirstName);
+
         return RedirectToAction("Index", "Wedding");
     }
 
 
-// Logout Method ================================================
-[HttpPost("logout")]
-public IActionResult Logout()
+    // Logout Method ================================================
+    [HttpPost("logout")]
+    public IActionResult Logout()
     {
         HttpContext.Session.Clear();
         return RedirectToAction("Index");
@@ -105,7 +107,7 @@ public IActionResult Logout()
 
 
 
-// Privacy Method ================================================
+    // Privacy Method ================================================
 
 
 
