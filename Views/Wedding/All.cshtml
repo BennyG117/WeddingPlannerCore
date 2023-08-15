@@ -1,0 +1,27 @@
+@model List<Wedding>
+
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <hr class="w-75" />
+        <table class="w-75 table table-dark table-striped table-bordered">
+            <thead class="table-secondary">
+                <th>Wedding Of</th>
+                <th>Date</th>
+                <th>Guest Count</th>
+                <th>Action</th>
+            </thead>
+            @foreach (Wedding wedding in Model )
+            {
+            <tbody>
+
+                <a class="text-dark" asp-controller="Wedding" asp-action="Details" asp-route-id="@wedding.WeddingId">
+                    <td>@wedding.WedderOne & @wedding.WedderTwo</td>
+                </a>
+                <td>@wedding.WeddingDate</td>
+                <td>TBD - PLACEHOLDER GUEST COUNT</td>
+                <td>TBD - ACTION PLACEHOLDER</td>
+
+            </tbody>
+            }
+        </table>
+
+    </div>
