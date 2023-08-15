@@ -29,20 +29,18 @@
                             <ul class="navbar-nav flex-grow-1">
                                 @* UPDATED BELOW: *@
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Wedding" asp-action="Index">Home    |</a>
+                                    <a class="nav-link text-dark text-decoration-underline" asp-area="" asp-controller="Wedding" asp-action="Index">Home    |</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Wedding" asp-action="New">Plan a Wedding    |</a>
+                                    <a class="nav-link text-dark text-decoration-underline" asp-area="" asp-controller="Wedding" asp-action="New">Plan a Wedding    |</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
-                                </li>
+
                                 @* ADDED LOGOUT BELOW *@
-                                @* <li class="nav-item">
+                                <li class="nav-item">
                                     <form  asp-controller="User" asp-action="Logout" method="post">
-                                    <button class="btn btn-outline-warning" >Logout</button>
+                                    <button class="btn btn-link text-dark" >Logout</button>
                                     </form>
-                                </li> *@
+                                </li>
                             </ul>
                         </div>
 
