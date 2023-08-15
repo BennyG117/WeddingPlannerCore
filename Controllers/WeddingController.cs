@@ -69,12 +69,12 @@ public class WeddingController : Controller
         //! check below was not needed*
         //check category and declaration at top of method = "newWedding" // does wedder one exist in the db?
         
-        if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
-        {
-            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
-            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
-            return View("New");
-        }
+        // if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
+        // {
+        //     ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+        //     ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+        //     return View("New");
+        // }
         //! check above is not needed ^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -139,13 +139,14 @@ public class WeddingController : Controller
 
         //! check below was not needed*
         //check category and declaration at top of method = "editedWedding" // does wedder one exist in the db?
-        if (db.Users.Any(u => u.FirstName == editedWedding.WedderOne) && db.Users.Any(u => u.FirstName == editedWedding.WedderTwo))
-        {
-            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
-            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
-            return Edit(id);
+        
+        // if (db.Users.Any(u => u.FirstName == editedWedding.WedderOne) && db.Users.Any(u => u.FirstName == editedWedding.WedderTwo))
+        // {
+        //     ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+        //     ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+        //     return Edit(id);
 
-        }
+        // }
         //! check above is not needed ^^^^^^^^^^^^^^^^^^^^^
         
         

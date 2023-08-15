@@ -21,7 +21,7 @@
                 <td>
                 <a class="text-light" asp-controller="Wedding" asp-action="Details" asp-route-id="@wedding.WeddingId"> @wedding.WedderOne & @wedding.WedderTwo </a>
                 </td>
-                <td>@wedding.WeddingDate</td>
+                <td>@wedding.WeddingDate.ToString("MMM d, yyyy")</td>
                 <td>@wedding.WeddingGuests.Count</td>
                 <td>
                     <p>
