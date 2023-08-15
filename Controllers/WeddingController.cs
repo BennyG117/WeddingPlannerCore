@@ -50,26 +50,13 @@ public class WeddingController : Controller
     }
 
 // ========(handle NEW WeddingMethod - view)=========
-//TODO: check if wedder one is in the db and if wedder two is also in db, if both exist in the db then validation will trigger.
+// check if wedder one is in the db and if wedder two is also in db, if both exist in the db then validation will trigger.
 
 
     [HttpPost("wedding/create")]
     //bringing in the model
     public IActionResult Create(Wedding newWedding)
     {
-        //check category and declaration at top of method = "newWedding" // does wedder one exist in the db?
-
-// if (!db.Users.Any(u => u.FirstName == newWedding.WedderOne || u.FirstName == newWedding.WedderTwo))
-//         {
-//             ModelState.AddModelError("WedderOne", "Wedding created cannot be between two users");
-//         }
-
-        
-        if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
-        {
-            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
-            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
-        }
 
         //checks model requirements*
         if(!ModelState.IsValid)
@@ -79,6 +66,16 @@ public class WeddingController : Controller
         }
 
 
+        //! check below was not needed*
+        //check category and declaration at top of method = "newWedding" // does wedder one exist in the db?
+        
+        if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
+        {
+            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+            return View("New");
+        }
+        //! check above is not needed ^^^^^^^^^^^^^^^^^^^^^
 
 
         newWedding.UserId = (int) HttpContext.Session.GetInt32("UUID");
@@ -133,18 +130,26 @@ public class WeddingController : Controller
     //adding in id parameter*
     public IActionResult Update(Wedding editedWedding, int id)
     {
-        //check category and declaration at top of method = "editedWedding" // does wedder one exist in the db?
-        if (db.Users.Any(u => u.FirstName == editedWedding.WedderOne) && db.Users.Any(u => u.FirstName == editedWedding.WedderTwo))
-        {
-            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
-            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
-        }
-
 
         if (!ModelState.IsValid)
         {
             return Edit(id);
         }
+
+
+        //! check below was not needed*
+        //check category and declaration at top of method = "editedWedding" // does wedder one exist in the db?
+        if (db.Users.Any(u => u.FirstName == editedWedding.WedderOne) && db.Users.Any(u => u.FirstName == editedWedding.WedderTwo))
+        {
+            ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
+            ModelState.AddModelError("WedderTwo", "Your SO already registered your wedding!");
+            return Edit(id);
+
+        }
+        //! check above is not needed ^^^^^^^^^^^^^^^^^^^^^
+        
+        
+        
         // confirm it matches the id we're passing in above*
     Wedding? weddings = db.Weddings.Include(v => v.Creator).FirstOrDefault(p => p.WeddingId == id);
 
@@ -185,8 +190,6 @@ public class WeddingController : Controller
         db.SaveChanges();
         return RedirectToAction("Index");
     }
-
-
 
 
 
