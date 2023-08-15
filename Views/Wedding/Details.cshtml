@@ -6,8 +6,9 @@
 
 <div>
     <div>
-        <h1 class="text-center">@ViewData["Title"]</h1>
-        <h3>Date: @Model.WeddingDate</h3>
+        <h1 class="text-center mt-5">@ViewData["Title"]</h1>
+        @* <h3>Date: @Model.WeddingDate.ToString("MM/dd/yyyy")</h3> *@
+        <h3 class="mt-3">Date: @Model.WeddingDate.ToString("MMM d, yyyy")</h3>
     </div>
     <div>
         <h2>Guests: </h2>
@@ -17,6 +18,14 @@
                 <li class="list-inline">@guests.User.FirstName @guests.User.LastName</li>
             }
         </ul>
+    </div>
+    <div>
+        @if(Model.UserId == Context.Session.GetInt32("UUID"))
+        {
+        <p>
+        <a  asp-controller="Wedding" asp-action="Edit" asp-route-id="@Model.WeddingId" class="btn btn-outline-success mt-2">Edit Vacation</a>
+        </p>
+        }
     </div>
 
 

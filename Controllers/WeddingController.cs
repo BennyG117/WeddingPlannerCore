@@ -58,6 +58,13 @@ public class WeddingController : Controller
     public IActionResult Create(Wedding newWedding)
     {
         //check category and declaration at top of method = "newWedding" // does wedder one exist in the db?
+
+// if (!db.Users.Any(u => u.FirstName == newWedding.WedderOne || u.FirstName == newWedding.WedderTwo))
+//         {
+//             ModelState.AddModelError("WedderOne", "Wedding created cannot be between two users");
+//         }
+
+        
         if (db.Users.Any(u => u.FirstName == newWedding.WedderOne) && db.Users.Any(u => u.FirstName == newWedding.WedderTwo))
         {
             ModelState.AddModelError("WedderOne", "Your SO already registered your wedding!");
@@ -155,7 +162,8 @@ public class WeddingController : Controller
         db.Weddings.Update(weddings);
         db.SaveChanges();
         // return RedirectToAction("Edit", new {id = id});
-        return RedirectToAction("Index");
+        // return RedirectToAction("Index");
+        return RedirectToAction("Details",  new {id = editedWedding.WeddingId});
     }
 
 
